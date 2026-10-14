@@ -1,0 +1,25 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+build/
+dist/
+
+# Local data and backups (may contain personal data)
+data/raw/
+data/exports/
+backups/
+*.dump
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
