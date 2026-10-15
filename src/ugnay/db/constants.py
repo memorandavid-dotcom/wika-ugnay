@@ -34,3 +34,20 @@ ORG_TYPES = (
 )
 QUALIFICATION_STATUSES = ("discovered", "under_review", "qualified", "disqualified")
 PUBLICATION_STATUSES = ("private", "in_review", "publishable")
+
+
+CONTACT_REVIEW_STATUSES = ("unreviewed", "reviewed", "rejected", "erased")
+METHOD_TYPES = ("email", "phone", "contact_form")
+METHOD_REVIEW_STATUSES = ("unreviewed", "reviewed", "rejected")
+VERIFICATION_STATUSES = ("unverified", "verified", "bounced", "invalid")
+SUPPRESSION_VALUE_TYPES = ("email", "domain", "phone")
+SUPPRESSION_REASONS = (
+    "opt_out",
+    "erasure_request",
+    "bounced",
+    "complaint",
+    "legal",
+    "internal_policy",
+)
+SUPPRESSION_STATUSES = ("active", "lifted")
+REQUEST_CHANNELS = ("email", "web_form", "phone", "in_person", "other")

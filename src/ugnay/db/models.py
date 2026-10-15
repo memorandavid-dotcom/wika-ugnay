@@ -204,6 +204,7 @@ class Department(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     __table_args__ = (
         UniqueConstraint("organization_id", "name"),
+        UniqueConstraint("id", "organization_id"),
         CheckConstraint("btrim(name) <> ''", name="name_not_blank"),
     )
 
@@ -228,3 +229,6 @@ class OrganizationLanguage(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
+
+
+from ugnay.db import models_people  # noqa: E402,F401  (registers people tables)
