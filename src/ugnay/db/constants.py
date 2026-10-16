@@ -51,3 +51,34 @@ SUPPRESSION_REASONS = (
 )
 SUPPRESSION_STATUSES = ("active", "lifted")
 REQUEST_CHANNELS = ("email", "web_form", "phone", "in_person", "other")
+
+
+RESOURCE_TYPES = (
+    "dictionary",
+    "vocabulary_list",
+    "corpus",
+    "learning_guide",
+    "educational_pdf",
+    "publication",
+    "research_dataset",
+    "other",
+)
+DOWNLOAD_STATUSES = ("not_downloaded", "downloaded", "failed")
+EXTRACTION_STATUSES = ("not_extracted", "extracted", "failed")
+PRODUCTION_STATUSES = ("not_approved", "approved_for_production", "revoked")
+PERMISSION_STATUSES = (
+    "unknown",
+    "pending_request",
+    "approved",
+    "restricted",
+    "denied",
+    "revoked",
+)
+PERMITTED_USES = (
+    "internal_research",
+    "product_use",
+    "redistribution",
+    "model_training",
+    "public_display",
+)
+OBSERVATION_ROLES = ("discovery", "metadata", "license_evidence")
