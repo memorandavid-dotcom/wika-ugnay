@@ -154,9 +154,9 @@ def test_language_code_format(session, bad_code):
 
 
 def test_language_code_unique(session):
-    session.add(Language(iso639_3="tgl", name="Tagalog"))
+    session.add(Language(iso639_3="qac", name="Tagalog"))
     session.flush()
-    assert_rejected(session, Language(iso639_3="tgl", name="Duplicate"))
+    assert_rejected(session, Language(iso639_3="qac", name="Duplicate"))
 
 
 def test_ingestion_run_cannot_finish_before_start(session):
@@ -185,7 +185,7 @@ def test_duplicate_observation_rejected(session):
 
 def test_organization_language_link_unique(session):
     org = make_org()
-    lang = Language(iso639_3="ceb", name="Cebuano")
+    lang = Language(iso639_3="qad", name="Cebuano")
     session.add_all([org, lang])
     session.flush()
     link = text(
