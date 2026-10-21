@@ -3,10 +3,11 @@ import hashlib
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import and_, delete, or_, select
+from sqlalchemy import and_, delete, or_, select, update
 from sqlalchemy.orm import Session
 
 from ugnay.db.models import SourceObservation
+from ugnay.db.models_outreach import OutreachActivity
 from ugnay.db.models_people import Contact, ContactAffiliation, ContactMethod
 from ugnay.outreach.suppression import add_suppression
 
@@ -83,6 +84,25 @@ def erase_contact(
         # The old hash is a guessable fingerprint of personal data, so replace it.
         obs.content_hash = hashlib.sha256(f"erased:{obs.id}".encode()).hexdigest()
     session.flush()
+
+    # 2b. Scrub outreach drafts to this person and cancel anything not yet sent.
+    if method_ids:
+        session.execute(
+            update(OutreachActivity)
+            .where(OutreachActivity.contact_method_id.in_(method_ids))
+            .values(draft_body=ERASED_NAME, subject=ERASED_NAME)
+            .execution_options(synchronize_session=False)
+        )
+        session.execute(
+            update(OutreachActivity)
+            .where(
+                OutreachActivity.contact_method_id.in_(method_ids),
+                OutreachActivity.status.in_(("drafted", "approved")),
+            )
+            .values(status="cancelled")
+            .execution_options(synchronize_session=False)
+        )
+        session.flush()
 
     # 3. Remove the person's methods and affiliations.
     session.execute(delete(ContactMethod).where(ContactMethod.contact_id == contact.id))

@@ -233,3 +233,4 @@ class OrganizationLanguage(Base):
 
 from ugnay.db import models_people  # noqa: E402,F401  (registers people tables)
 from ugnay.db import models_resources  # noqa: E402,F401  (registers resource tables)
+from ugnay.db import models_outreach  # noqa: E402,F401  (registers outreach tables)

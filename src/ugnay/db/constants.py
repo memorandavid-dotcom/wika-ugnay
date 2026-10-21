@@ -82,3 +82,34 @@ PERMITTED_USES = (
     "public_display",
 )
 OBSERVATION_ROLES = ("discovery", "metadata", "license_evidence")
+
+OBJECTIVES = ("resource_acquisition", "institutional_partnership")
+OPPORTUNITY_STAGES = (
+    "discovered",
+    "under_review",
+    "qualified",
+    "approved_for_outreach",
+    "engaged",
+    "meeting_scheduled",
+    "partnership_established",
+    "declined",
+    "closed",
+)
+QUALIFIED_STAGES = (
+    "qualified",
+    "approved_for_outreach",
+    "engaged",
+    "meeting_scheduled",
+    "partnership_established",
+)
+CAMPAIGN_STATUSES = ("draft", "active", "paused", "completed")
+ACTIVITY_STATUSES = (
+    "drafted",
+    "approved",
+    "sent",
+    "replied",
+    "meeting_scheduled",
+    "closed",
+    "cancelled",
+    "blocked",
+)
