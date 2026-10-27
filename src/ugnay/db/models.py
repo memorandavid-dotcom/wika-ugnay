@@ -15,7 +15,7 @@ from sqlalchemy import (
     func,
     text,
 )
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
 from ugnay.db.base import Base, TimestampMixin, UUIDPrimaryKeyMixin, in_list_check
@@ -58,6 +58,16 @@ class Source(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     last_success_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     last_error: Mapped[str | None] = mapped_column(Text)
     use_notes: Mapped[str | None] = mapped_column(Text)
+    allowed_domains: Mapped[list[str]] = mapped_column(
+        ARRAY(String(255)),
+        nullable=False,
+        default=list,
+        server_default=text("'{}'::varchar[]"),
+    )
+    terms_url: Mapped[str | None] = mapped_column(Text)
+    reviewed_by: Mapped[str | None] = mapped_column(String(100))
+    review_notes: Mapped[str | None] = mapped_column(Text)
+    robots_checked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     __table_args__ = (
         UniqueConstraint("name"),
@@ -71,6 +81,25 @@ class Source(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         CheckConstraint(
             "NOT enabled OR (review_status = 'approved' AND terms_reviewed_at IS NOT NULL)",
             name="enabled_requires_review",
+        ),
+        # The next three are created by migration 0011 (autogenerate cannot see CHECKs).
+        CheckConstraint(
+            "array_to_string(allowed_domains, ',') = lower(array_to_string(allowed_domains, ','))",
+            name="allowed_domains_lowercase",
+        ),
+        CheckConstraint(
+            "review_status <> 'approved' OR (terms_reviewed_at IS NOT NULL "
+            "AND reviewed_by IS NOT NULL AND btrim(reviewed_by) <> '' "
+            "AND terms_url IS NOT NULL AND terms_url ~ '^https?://' "
+            "AND review_notes IS NOT NULL AND btrim(review_notes) <> '' "
+            "AND cardinality(allowed_domains) >= 1)",
+            name="approved_requires_evidence",
+        ),
+        CheckConstraint(
+            "review_status <> 'approved' "
+            "OR collection_method NOT IN ('html_public_page', 'sitemap') "
+            "OR robots_checked_at IS NOT NULL",
+            name="web_approval_requires_robots_check",
         ),
     )
 
@@ -114,6 +143,12 @@ class IngestionRun(UUIDPrimaryKeyMixin, TimestampMixin, Base):
             name="finish_after_start",
         ),
         Index("ix_ingestion_runs_source_started", "source_id", "started_at"),
+        Index(
+            "uq_ingestion_one_running_per_source",
+            "source_id",
+            unique=True,
+            postgresql_where=text("status = 'running'"),
+        ),
     )
 
 
@@ -234,3 +269,4 @@ class OrganizationLanguage(Base):
 from ugnay.db import models_people  # noqa: E402,F401  (registers people tables)
 from ugnay.db import models_resources  # noqa: E402,F401  (registers resource tables)
 from ugnay.db import models_outreach  # noqa: E402,F401  (registers outreach tables)
+from ugnay.db import models_sources  # noqa: E402,F401  (registers source review table)

@@ -14,6 +14,12 @@ from ugnay.db.models import (
 )
 
 NOW = datetime.now(timezone.utc)
+APPROVED = dict(
+    enabled=True, review_status="approved", terms_reviewed_at=NOW,
+    reviewed_by="cdo", terms_url="https://example.gov.ph/terms",
+    review_notes="Terms allow public directory use",
+    allowed_domains=["example.gov.ph"], robots_checked_at=NOW,
+)
 
 
 def assert_rejected(session, *objects):
@@ -89,7 +95,7 @@ def test_source_cannot_be_enabled_without_terms_review(session):
 
 
 def test_source_can_be_enabled_after_review(session):
-    source = make_source(enabled=True, review_status="approved", terms_reviewed_at=NOW)
+    source = make_source(**APPROVED)
     session.add(source)
     session.flush()
     assert source.enabled is True
@@ -160,7 +166,7 @@ def test_language_code_unique(session):
 
 
 def test_ingestion_run_cannot_finish_before_start(session):
-    source = make_source()
+    source = make_source(**APPROVED)
     session.add(source)
     session.flush()
     assert_rejected(

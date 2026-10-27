@@ -113,3 +113,6 @@ ACTIVITY_STATUSES = (
     "cancelled",
     "blocked",
 )
+
+REVIEW_DECISIONS = ("approved", "rejected")
+WEB_COLLECTION_METHODS = ("html_public_page", "sitemap")

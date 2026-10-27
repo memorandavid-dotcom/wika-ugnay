@@ -1,0 +1,12 @@
+sources:
+  - name: Glottolog CLDF (language list)
+    url: https://github.com/glottolog/glottolog-cldf
+    category: language_catalog
+    connector_type: manual_csv
+    collection_method: published_dataset
+    allowed_domains:
+      - github.com
+    refresh_interval_hours: 4380
+    requests_per_minute: 5
+    max_response_bytes: 10000000
+    use_notes: "CC-BY-4.0; attribution required (see docs/data-sources.md). Loaded by hand with jobs/seed_languages."
